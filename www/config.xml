@@ -3,7 +3,7 @@
 <!-- config.xml reference: https://build.phonegap.com/docs/config-xml -->
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
-        id        = "fr.pmclab.openair"
+        id        = "fr.pmclab2.openair"
         version   = "1.0.0">
 
     <name>OpenAir</name>
@@ -18,7 +18,6 @@
 
     <gap:platform name="ios" />
     <gap:platform name="android" />
-
 
     <!--
         Enable individual API permissions here.
