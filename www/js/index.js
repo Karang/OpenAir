@@ -50,12 +50,13 @@ var app = {
         rfduino.discover(5, app.onDiscoverDevice, app.onError);
     },
     onDiscoverDevice: function(device) {
-        var listItem = document.createElement('li'),
+        var listItem = document.createElement('div'),
             html = '<b>' + device.name + '</b><br/>' +
                 'RSSI: ' + device.rssi + '&nbsp;|&nbsp;' +
                 'Advertising: ' + device.advertising + '<br/>' +
                 device.uuid;
 
+        listItem.setAttribute('class', "deviceListElt");
         listItem.setAttribute('uuid', device.uuid);
         listItem.innerHTML = html;
         deviceList.appendChild(listItem);
@@ -79,10 +80,12 @@ var app = {
         var ppmpcfValue = dataArray[0];
         var tempValue = dataArray[2];
         var humValue = dataArray[1];
+        var batValue = Math.max(0,Math.min(1.0, (dataArray[3]-3.5)/(4.2-3.5))) * 100.0;
 
 		ppmpcf.innerHTML = ppmpcfValue.toFixed(2);
         tempCelsius.innerHTML = tempValue.toFixed(2);
         hum.innerHTML = humValue.toFixed(2);
+        batterie.innerHTML = batValue.toFixed(2);
     },
     disconnect: function() {
         rfduino.disconnect(app.showMainPage, app.onError);
