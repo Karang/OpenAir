@@ -102,8 +102,3 @@ h1 {
     animation:fade 3000ms infinite;
     -webkit-animation:fade 3000ms infinite;
 }
-
-li {
-    background-color:#ddddff;
-    border-radius: 25px;
-}
