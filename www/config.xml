@@ -15,6 +15,8 @@
     <author href="http://pmclab.fr" email="arthur.hennequin@free.fr">
         PMClab
     </author>
+    
+    <preference name="android-build-tool" value="ant" />
 
     <gap:platform name="ios" />
     <gap:platform name="android" />
