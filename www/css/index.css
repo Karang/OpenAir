@@ -103,7 +103,7 @@ h1 {
     -webkit-animation:fade 3000ms infinite;
 }
 
-li {
+.device_list_elt {
     background-color:#ddddff;
     border-radius: 25px;
 }
