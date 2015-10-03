@@ -21,7 +21,34 @@ var arrayBufferToFloat = function (ab) {
     var a = new Float32Array(ab);
     return a;
 };
- 
+
+var slope = function(value, min, max) {
+	return (value-min)/(max-min);
+};
+
+var lerp = function(a, b, r) {
+	return a + r*(b-a);
+};
+
+var BatteryTool = {};
+BatteryTool.lipo_charge = [{v:3.0, charge:0}, {v:3.3, charge:5}, {v:3.6, charge:10},
+                   {v:3.7, charge:20}, {v:3.75, charge:30}, {v:3.79, charge:40},
+                   {v:3.83, charge:50}, {v:3.87, charge:60}, {v:3.92, charge:70},
+                   {v:3.97, charge:80}, {v:4.1, charge:90}, {v:4.2, charge:100}];
+BatteryTool.getIndex = function(voltage) {
+    for (var i=1 ; i<BatteryTool.lipo_charge.length ; i++) {
+        if (voltage<=BatteryTool.lipo_charge[i]) {
+            return i;
+        }
+    }
+    return BatteryTool.lipo_charge.length-1;
+};
+BatteryTool.voltageToPcent = function(voltage) {
+    var i = BatteryTool.getIndex(voltage);
+    var r = slope(voltage, BatteryTool.lipo_charge[i-1], BatteryTool.lipo_charge[i]);
+    return Math.min(Math.max(lerp(BatteryTool.lipo_charge[i-1], BatteryTool.lipo_charge[i], r), 0.0), 100.0);
+};
+
 var app = {
     // Application Constructor
     initialize: function() {
@@ -52,9 +79,8 @@ var app = {
     onDiscoverDevice: function(device) {
         var listItem = document.createElement('div'),
             html = '<b>' + device.name + '</b><br/>' +
-                'RSSI: ' + device.rssi + '&nbsp;|&nbsp;' +
-                'Advertising: ' + device.advertising + '<br/>' +
-                device.uuid;
+                'RSSI : ' + device.rssi + '&nbsp;|&nbsp;' +
+                'Numéro de série : ' + device.advertising;
 
         listItem.setAttribute('class', "deviceListElt");
         listItem.setAttribute('uuid', device.uuid);
