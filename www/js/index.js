@@ -37,7 +37,7 @@ BatteryTool.lipo_charge = [{v:3.0, charge:0}, {v:3.3, charge:5}, {v:3.6, charge:
                    {v:3.97, charge:80}, {v:4.1, charge:90}, {v:4.2, charge:100}];
 BatteryTool.getIndex = function(voltage) {
     for (var i=1 ; i<BatteryTool.lipo_charge.length ; i++) {
-        if (voltage<=BatteryTool.lipo_charge[i]) {
+        if (voltage<=BatteryTool.lipo_charge[i].v) {
             return i;
         }
     }
@@ -45,8 +45,8 @@ BatteryTool.getIndex = function(voltage) {
 };
 BatteryTool.voltageToPcent = function(voltage) {
     var i = BatteryTool.getIndex(voltage);
-    var r = slope(voltage, BatteryTool.lipo_charge[i-1], BatteryTool.lipo_charge[i]);
-    return Math.min(Math.max(lerp(BatteryTool.lipo_charge[i-1], BatteryTool.lipo_charge[i], r), 0.0), 100.0);
+    var r = slope(voltage, BatteryTool.lipo_charge[i-1].v, BatteryTool.lipo_charge[i].v);
+    return Math.min(Math.max(lerp(BatteryTool.lipo_charge[i-1].charge, BatteryTool.lipo_charge[i].charge, r), 0.0), 100.0);
 };
 
 var app = {
