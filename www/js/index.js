@@ -53,22 +53,14 @@ var app = {
     // Application Constructor
     initialize: function() {
         this.bindEvents();
-        detailPage.hidden = true;
+        $("#detailPage").hide();
     },
-    // Bind Event Listeners
-    //
-    // Bind any events that are required on startup. Common events are:
-    // 'load', 'deviceready', 'offline', and 'online'.
     bindEvents: function() {
         document.addEventListener('deviceready', this.onDeviceReady, false);
         refreshButton.addEventListener('touchstart', this.refreshDeviceList, false);
         closeButton.addEventListener('touchstart', this.disconnect, false);
         deviceList.addEventListener('touchstart', this.connect, false); // assume not scrolling
     },
-    // deviceready Event Handler
-    //
-    // The scope of 'this' is the event. In order to call the 'receivedEvent'
-    // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function() {
         app.refreshDeviceList();
     },
@@ -77,14 +69,13 @@ var app = {
         rfduino.discover(5, app.onDiscoverDevice, app.onError);
     },
     onDiscoverDevice: function(device) {
-        var listItem = document.createElement('div'),
-            html = '<b>' + device.name + '</b><br/>' +
-                'RSSI : ' + device.rssi + '&nbsp;|&nbsp;' +
-                'Numéro de série : ' + device.advertising;
+        var listItem = document.createElement('div');
+        var html = '<b>' + device.name + '</b><br/>' + 'Numéro de série : ' + device.advertising + '<br/>RSSI : '+ device.rssi;
 
         listItem.setAttribute('class', "deviceListElt");
         listItem.setAttribute('uuid', device.uuid);
         listItem.innerHTML = html;
+        
         deviceList.appendChild(listItem);
     },
     connect: function(e) {
@@ -106,23 +97,23 @@ var app = {
         var ppmpcfValue = dataArray[0];
         var tempValue = dataArray[2];
         var humValue = dataArray[1];
-        var batValue = Math.max(0,Math.min(1.0, (dataArray[3]-3.5)/(4.2-3.5))) * 100.0;
+        var batValue = BatteryTool.voltageToPcent(dataArray[3]);
 
-		ppmpcf.innerHTML = ppmpcfValue.toFixed(2);
-        tempCelsius.innerHTML = tempValue.toFixed(2);
-        hum.innerHTML = humValue.toFixed(2);
-        batterie.innerHTML = batValue.toFixed(2);
+        $("#ppmpcf").html(ppmpcfValue.toFixed(2));
+        $("#tempCelsius").html(tempValue.toFixed(2));
+        $("#hum").html(humValue.toFixed(2));
+        $("#batterie").html(batValue.toFixed(2));
     },
     disconnect: function() {
         rfduino.disconnect(app.showMainPage, app.onError);
     },
     showMainPage: function() {
-        mainPage.hidden = false;
-        detailPage.hidden = true;
+        $("#mainPage").show();
+        $("#detailPage").hide();
     },
     showDetailPage: function() {
-        mainPage.hidden = true;
-        detailPage.hidden = false;
+        $("#mainPage").hide();
+        $("#detailPage").show();
     },
     onError: function(reason) {
         if (reason.toUpperCase() == "DISCONNECTED") {
