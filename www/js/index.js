@@ -167,10 +167,19 @@ var app = {
     },
     sendData: function() {
         $("#ajaxLoader").show();
-        $.getJSON("http://pmclab.fr:8043/addAll", dataToShare, function(result) {
-            $("#ajaxLoader").hide();
-            $("#shareContent").hide();
-            $("#infos").html("Données partagées. Merci de votre contribution.");
+        $.ajax({
+            url : "http://pmclab.fr:8043/addAll",
+            type : 'PUT',
+            data : dataToShare,
+            success: function(result) {
+                $("#ajaxLoader").hide();
+                $("#shareContent").hide();
+                $("#infos").html("Données partagées. Merci de votre contribution.");
+            },
+            error : function(error){
+                $("#ajaxLoader").hide();
+                $("#infos").html("Une erreur est survenue lors du partage.");
+            }
         });
     },
     disconnect: function() {
