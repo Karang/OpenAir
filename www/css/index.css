@@ -90,4 +90,9 @@ h1 {
 .deviceListElt {
     background-color:#ddddff;
     border-radius: 25px;
+    margin-bottom: 10px;
+}
+
+#ajaxLoader {
+    text-align: center;
 }

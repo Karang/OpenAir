@@ -49,20 +49,33 @@ BatteryTool.voltageToPcent = function(voltage) {
     return Math.min(Math.max(lerp(BatteryTool.lipo_charge[i-1].charge, BatteryTool.lipo_charge[i].charge, r), 0.0), 100.0);
 };
 
+var dataToShare = {};
+var ppmpcfValue;
+var tempValue;
+var humValue;
+
 var app = {
     // Application Constructor
     initialize: function() {
         this.bindEvents();
         $("#detailPage").hide();
+        $("#ajaxLoader").hide();
+        $("#shareContent").hide();
     },
     bindEvents: function() {
         document.addEventListener('deviceready', this.onDeviceReady, false);
         refreshButton.addEventListener('touchstart', this.refreshDeviceList, false);
         closeButton.addEventListener('touchstart', this.disconnect, false);
         deviceList.addEventListener('touchstart', this.connect, false); // assume not scrolling
+        shareButton.addEventListener('touchstart', this.shareData, false);
+        sendButton.addEventListener('touchstart', this.sendData, false);
     },
     onDeviceReady: function() {
         app.refreshDeviceList();
+        
+        var onGPSSuccess = function(position) { };
+        var onGPSError = function(error) { };
+        navigator.geolocation.getCurrentPosition(onGPSSuccess, onGPSError);
     },
     refreshDeviceList: function() {
         deviceList.innerHTML = ''; // empties the list
@@ -94,15 +107,61 @@ var app = {
         console.log(data);
         var dataArray = arrayBufferToFloat(data);
         
-        var ppmpcfValue = dataArray[0];
-        var tempValue = dataArray[2];
-        var humValue = dataArray[1];
+        ppmpcfValue = dataArray[0];
+        tempValue = dataArray[2];
+        humValue = dataArray[1];
         var batValue = BatteryTool.voltageToPcent(dataArray[3]);
 
         $("#ppmpcf").html(ppmpcfValue.toFixed(2));
         $("#tempCelsius").html(tempValue.toFixed(2));
         $("#hum").html(humValue.toFixed(2));
         $("#batterie").html(batValue.toFixed(2));
+    },
+    shareData: function() {
+        $("#ajaxLoader").show();
+        
+        if (ppmpcfValue && tempValue && humValue) {
+            dataToShare.ppmpcf = ppmpcfValue;
+            dataToShare.temperature = tempValue;
+            dataToShare.humidity = humValue;
+            
+            var onGPSSuccess = function(position) {
+                dataToShare.latitude = position.coords.latitude;
+                dataToShare.longitude = position.coords.longitude;
+                dataToShare.altitude = position.coords.altitude;
+                if (position.timestamp !== undefined) {
+                    dataToShare.timestamp = position.timestamp;
+                } else {
+                    dataToShare.timestamp = new Date().getTime();
+                }
+                
+                var html = "";
+                html += "Particules : "+dataToShare.ppmpcf.toFixed(2)+" ppm/cf<br/>";
+                html +=	"Température : "+dataToShare.temperature.toFixed(2)+" &deg;C<br/>";
+                html += "Humidité : "+dataToShare.humidity.toFixed(2)+" %<br/>";
+                html += "<br/>";
+                html += "Latitude : "+dataToShare.latitude+"<br/>";
+                html += "Longitude : "+dataToShare.longitude+"<br/>";
+                html += "Date : "+new Date(dataToShare.timestamp).toLocaleDateString("fr-FR");
+                
+                $("#shareData").html(html);
+                $("#shareContent").show();
+                $("#ajaxLoader").hide();
+            };
+            
+            var onGPSError = function(error) {
+    			$("#ajaxLoader").hide();
+    			$("#infos").html("Impossible de récupérer les coordonnées GPS de l'apareil.");
+            };
+            
+            navigator.geolocation.getCurrentPosition(onGPSSuccess, onGPSError);
+        } else {
+             $("#ajaxLoader").hide();
+             $("#infos").html("Aucune donnée à partager.");
+        }
+    },
+    sendData: function() {
+        $("#ajaxLoader").show();
     },
     disconnect: function() {
         rfduino.disconnect(app.showMainPage, app.onError);
