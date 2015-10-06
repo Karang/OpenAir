@@ -143,7 +143,8 @@ var app = {
                 html += "<br/>";
                 html += "Latitude : "+dataToShare.latitude+"<br/>";
                 html += "Longitude : "+dataToShare.longitude+"<br/>";
-                html += "Date : "+new Date(dataToShare.timestamp).toLocaleDateString("fr-FR");
+                var d = new Date(dataToShare.timestamp);
+                html += "Date : "+d.getDate()+"/"+d.getMonth()+"/"+d.getYear()+" "+d.getHours()+":"+d.getMinutes();
                 
                 $("#shareData").html(html);
                 $("#shareContent").show();
