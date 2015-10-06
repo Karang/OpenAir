@@ -73,6 +73,9 @@ var app = {
     onDeviceReady: function() {
         app.refreshDeviceList();
         
+        $.support.cors = true;
+        $.mobile.allowCrossDomainPages = true;
+        
         var onGPSSuccess = function(position) { };
         var onGPSError = function(error) { };
         navigator.geolocation.getCurrentPosition(onGPSSuccess, onGPSError);
