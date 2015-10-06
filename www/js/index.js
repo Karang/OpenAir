@@ -134,6 +134,7 @@ var app = {
                     dataToShare.timestamp = position.timestamp;
                 } else {
                     dataToShare.timestamp = new Date().getTime();
+                    $("#infos").html("timestamp error");
                 }
                 
                 var html = "";
@@ -145,6 +146,8 @@ var app = {
                 html += "Longitude : "+dataToShare.longitude+"<br/>";
                 var d = new Date(dataToShare.timestamp);
                 html += "Date : "+d.getDate()+"/"+d.getMonth()+"/"+d.getYear()+" "+d.getHours()+":"+d.getMinutes();
+                 html += "<br/>Date : "+d.toLocaleDateString("fr-FR");
+                 html += "<br/>timestamp"+dataToShare.timestamp;
                 
                 $("#shareData").html(html);
                 $("#shareContent").show();
