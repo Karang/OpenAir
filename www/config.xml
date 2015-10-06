@@ -89,9 +89,7 @@
         Otherwise, you can specify specific domains:
     -->
     <access origin="http://127.0.0.1*"/> <!-- allow local pages -->
-    
-    <access origin="http://37.187.4.166*"/><!-- Serveur de tests (PMClab)-->
-    <access origin="http://*.tile.osm.org*"/><!-- Serveur de tiles d'open street map -->
+    <access origin="http://pmclab.fr*"/><!-- Serveur de tests (PMClab)-->
     
     <!--
         <access origin="http://phonegap.com" />                    - allow any secure requests to http://phonegap.com/

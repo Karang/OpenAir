@@ -134,7 +134,6 @@ var app = {
                     dataToShare.timestamp = position.timestamp;
                 } else {
                     dataToShare.timestamp = new Date().getTime();
-                    $("#infos").html("timestamp error");
                 }
                 
                 var html = "";
@@ -145,9 +144,7 @@ var app = {
                 html += "Latitude : "+dataToShare.latitude+"<br/>";
                 html += "Longitude : "+dataToShare.longitude+"<br/>";
                 var d = new Date(dataToShare.timestamp);
-                html += "Date : "+d.getDate()+"/"+d.getMonth()+"/"+d.getYear()+" "+d.getHours()+":"+d.getMinutes();
-                 html += "<br/>Date : "+d.toLocaleDateString("fr-FR");
-                 html += "<br/>timestamp"+dataToShare.timestamp;
+                html += "Date : "+d.getDate()+"/"+d.getMonth()+"/"+d.getFullYear()+" "+d.getHours()+":"+d.getMinutes();
                 
                 $("#shareData").html(html);
                 $("#shareContent").show();
@@ -167,6 +164,11 @@ var app = {
     },
     sendData: function() {
         $("#ajaxLoader").show();
+        $.getJSON("http://pmclab.fr:8043/addAll", dataToShare, function(result) {
+            $("#ajaxLoader").hide();
+            $("#shareContent").hide();
+            $("#infos").html("Données partagées. Merci de votre contribution.");
+        });
     },
     disconnect: function() {
         rfduino.disconnect(app.showMainPage, app.onError);
