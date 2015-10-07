@@ -169,6 +169,7 @@ var app = {
             url: "http://pmclab.fr:8043/addAll",
             type: 'PUT',
             data: JSON.stringify(dataToShare),
+            contentType: 'application/json',
             success: function(result) {
                 $("#ajaxLoader").hide();
                 $("#shareContent").hide();
