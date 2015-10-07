@@ -73,7 +73,7 @@ var app = {
     onDeviceReady: function() {
         app.refreshDeviceList();
         
-        app.xmlHttp = new XMLHttpRequest();
+        $.support.cors = true;
         
         var onGPSSuccess = function(position) { };
         var onGPSError = function(error) { };
@@ -166,22 +166,21 @@ var app = {
     },
     sendData: function() {
         $("#ajaxLoader").show();
-        
-        app.xmlHttp.onreadystatechange = function() {
-            if (app.xmlHttp.readyState === 4 && (app.xmlHttp.status === 200 || app.xmlHttp.status===0)) {
+        $.ajax({
+            url: "http://pmclab.fr:8043/addAll",
+            type: 'PUT',
+            data: dataToShare,
+            crossDomain: true,
+            success: function(result) {
                 $("#ajaxLoader").hide();
-                if (app.xmlHttp.responseText === "ok") {
-                    $("#shareContent").hide();
-                    $("#infos").html("Données partagées. Merci de votre contribution.");
-                } else {
-                    $("#infos").html("Une erreur est survenue lors du partage.");
-                }
+                $("#shareContent").hide();
+                $("#infos").html("Données partagées. Merci de votre contribution.");
+            },
+            error: function(xhr, status, error) {
+                $("#ajaxLoader").hide();
+                $("#infos").html("Une erreur est survenue lors du partage."+JSON.stringify([xhr, status, error]));
             }
-        };
-        
-        app.xmlHttp.open('PUT', "http://pmclab.fr:8043/addAll", true);
-        app.xmlHttp.setRequestHeader('Content-Type', 'application/json');
-        app.xmlHttp.send(JSON.stringify(dataToShare));
+        });
     },
     disconnect: function() {
         rfduino.disconnect(app.showMainPage, app.onError);
