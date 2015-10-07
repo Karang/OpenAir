@@ -168,7 +168,7 @@ var app = {
         $.ajax({
             url: "http://pmclab.fr:8043/addAll",
             type: 'PUT',
-            data: dataToShare,
+            data: JSON.stringify(dataToShare),
             success: function(result) {
                 $("#ajaxLoader").hide();
                 $("#shareContent").hide();
@@ -176,7 +176,7 @@ var app = {
             },
             error: function(xhr, status, error) {
                 $("#ajaxLoader").hide();
-                $("#infos").html("Une erreur est survenue lors du partage."+JSON.stringify([xhr, status, error]));
+                $("#infos").html("Une erreur est survenue lors du partage.");
             }
         });
     },
