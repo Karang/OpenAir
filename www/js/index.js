@@ -120,6 +120,7 @@ var app = {
     shareData: function() {
         $("#ajaxLoader").show();
         $("#shareContent").hide();
+        $("#infos").html("");
         
         if (ppmpcfValue && tempValue && humValue) {
             dataToShare.ppmpcf = ppmpcfValue;
