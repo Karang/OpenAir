@@ -130,7 +130,11 @@ var app = {
             var onGPSSuccess = function(position) {
                 dataToShare.latitude = position.coords.latitude;
                 dataToShare.longitude = position.coords.longitude;
-                dataToShare.altitude = position.coords.altitude;
+                if (position.coords.altitude == null) {
+                    dataToShare = 0;
+                } else {
+                    dataToShare.altitude = position.coords.altitude;
+                }
                 if (position.timestamp !== undefined) {
                     dataToShare.timestamp = position.timestamp;
                 } else {
@@ -144,6 +148,7 @@ var app = {
                 html += "<br/>";
                 html += "Latitude : "+dataToShare.latitude+"<br/>";
                 html += "Longitude : "+dataToShare.longitude+"<br/>";
+                html += "Altitude : "+dataToShare.altitude+"<br/>";
                 var d = new Date(dataToShare.timestamp);
                 html += "Date : "+d.getDate()+"/"+d.getMonth()+"/"+d.getFullYear()+" "+d.getHours()+":"+d.getMinutes();
                 
