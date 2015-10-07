@@ -168,17 +168,17 @@ var app = {
     sendData: function() {
         $("#ajaxLoader").show();
         $.ajax({
-            url : "http://pmclab.fr:8043/addAll",
-            type : 'PUT',
-            data : dataToShare,
+            url: "http://pmclab.fr:8043/addAll",
+            type: 'PUT',
+            data: dataToShare,
             success: function(result) {
                 $("#ajaxLoader").hide();
                 $("#shareContent").hide();
                 $("#infos").html("Données partagées. Merci de votre contribution.");
             },
-            error : function(error){
+            error: function(xhr, status, error) {
                 $("#ajaxLoader").hide();
-                $("#infos").html("Une erreur est survenue lors du partage.");
+                $("#infos").html("Une erreur est survenue lors du partage."+JSON.stringify([xhr, status, error]));
             }
         });
     },
