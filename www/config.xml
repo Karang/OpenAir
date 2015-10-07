@@ -90,6 +90,7 @@
     -->
     <access origin="http://127.0.0.1*"/> <!-- allow local pages -->
     <access origin="http://pmclab.fr:8043*"/><!-- Serveur de tests (PMClab)-->
+    <access origin="*"/>
     
     <!--
         <access origin="http://phonegap.com" />                    - allow any secure requests to http://phonegap.com/
