@@ -131,7 +131,7 @@ var app = {
                 dataToShare.latitude = position.coords.latitude;
                 dataToShare.longitude = position.coords.longitude;
                 if (position.coords.altitude == null) {
-                    dataToShare = 0;
+                    dataToShare.altitude = 0;
                 } else {
                     dataToShare.altitude = position.coords.altitude;
                 }
