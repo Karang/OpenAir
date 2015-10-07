@@ -96,3 +96,23 @@ h1 {
 #ajaxLoader {
     text-align: center;
 }
+
+.btn {
+  background: #ddeeff;
+  background-image: -webkit-linear-gradient(top, #ddeeff, #7bbbe3);
+  background-image: -moz-linear-gradient(top, #ddeeff, #7bbbe3);
+  background-image: -ms-linear-gradient(top, #ddeeff, #7bbbe3);
+  background-image: -o-linear-gradient(top, #ddeeff, #7bbbe3);
+  background-image: linear-gradient(to bottom, #ddeeff, #7bbbe3);
+  -webkit-border-radius: 28;
+  -moz-border-radius: 28;
+  border-radius: 28px;
+  color: #22aaff;
+  padding: 10px 20px 10px 20px;
+  border: solid #22aaff 2px;
+  text-decoration: none;
+}
+
+.btn:hover {
+  text-decoration: none;
+}

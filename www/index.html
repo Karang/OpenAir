@@ -14,7 +14,7 @@
             <h1>OpenAir</h1>
             <br/>
             <div id="mainPage">
-            	<button id="refreshButton">Trouver des capteurs</button>
+            	<a id="refreshButton" class="btn">Trouver des capteurs</a><br/>
             	<br/>
                 <div id="deviceList"></div>
             </div>
@@ -26,16 +26,16 @@
                     Batterie : <span id="batterie"></span>&nbsp;%<br/><br/>
                     
                     <input id="autoShare" type="checkbox"> Partage automatique<br/><br/>
-                    <button id="shareButton">Partager une mesure</button><br/><br/>
+                    <a id="shareButton" class="btn">Partager une mesure</a><br/><br/>
                 </div>
                 <div id="shareContent">
                     <div id="shareData"></div><br/>
-                    <button id="sendButton">Envoyer</button>
+                    <a id="sendButton" class="btn">Envoyer</a>
                 </div>
                 <br/>
                 <div id="ajaxLoader"><img src="img/ajax-loader-blue.gif" width="30px" height="30px"/></div>
                 <div id="infos"></div>
-                <button id="closeButton">Déconnexion</button><br/>
+                <a id="closeButton" class="btn">Déconnexion</a><br/>
             </div>
         </div>
         <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
