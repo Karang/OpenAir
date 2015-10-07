@@ -57,6 +57,7 @@
     -->
     <gap:plugin name="com.megster.cordova.rfduino" version="0.1.0" />
     <gap:plugin name="org.apache.cordova.geolocation" />
+    <gap:plugin name="com.indigoway.cordova.whitelist.whitelistplugin" version="1.1.1" />
 
     <!-- Define app icon for each platform. -->
     <icon src="icon.png" />
