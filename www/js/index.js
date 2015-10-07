@@ -73,8 +73,6 @@ var app = {
     onDeviceReady: function() {
         app.refreshDeviceList();
         
-        $.support.cors = true;
-        
         var onGPSSuccess = function(position) { };
         var onGPSError = function(error) { };
         navigator.geolocation.getCurrentPosition(onGPSSuccess, onGPSError);
@@ -170,7 +168,6 @@ var app = {
             url: "http://pmclab.fr:8043/addAll",
             type: 'PUT',
             data: dataToShare,
-            crossDomain: true,
             success: function(result) {
                 $("#ajaxLoader").hide();
                 $("#shareContent").hide();
