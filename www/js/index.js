@@ -71,7 +71,72 @@ var app = {
         deviceList.addEventListener('touchstart', this.connect, false); // assume not scrolling
         shareButton.addEventListener('touchstart', this.shareData, false);
         sendButton.addEventListener('touchstart', this.sendData, false);
-        autoShare.addEventListener("change", this.autoShareChange, false);
+        $("#autoShare").change(function() {
+            if (this.checked) {
+                $("#infos").html("Partage automatique activé.");
+                if (shareTimer == null) {
+                    shareTimer = setInterval(function() {
+                        $("#infos").html("Partage en cours...");
+                        if (ppmpcfValue && tempValue && humValue) {
+                            dataToShare.ppmpcf = ppmpcfValue;
+                            dataToShare.temperature = tempValue;
+                            dataToShare.humidity = humValue;
+                            
+                            var onGPSSuccess = function(position) {
+                                dataToShare.latitude = position.coords.latitude;
+                                dataToShare.longitude = position.coords.longitude;
+                                if (position.coords.altitude == null) {
+                                    dataToShare.altitude = 0;
+                                } else {
+                                    dataToShare.altitude = position.coords.altitude;
+                                }
+                                if (position.timestamp !== undefined) {
+                                    dataToShare.timestamp = position.timestamp;
+                                } else {
+                                    dataToShare.timestamp = new Date().getTime();
+                                }
+                                
+                                $.ajax({
+                                    url: "http://pmclab.fr:8043/addAll",
+                                    type: 'PUT',
+                                    data: JSON.stringify(dataToShare),
+                                    contentType: 'application/json',
+                                    success: function(result) {
+                                        $("#infos").html("Données partagées automatiquement.");
+                                    },
+                                    error: function(xhr, status, error) {
+                                        $("#autoShare").attr('checked', false);
+                                        clearInterval(shareTimer);
+                                        shareTimer = null;
+                    		        	$("#infos").html("Echec du partage.");
+                                    }
+                                });
+                            };
+                            
+                            var onGPSError = function(error) {
+                                $("#autoShare").attr('checked', false);
+                                clearInterval(shareTimer);
+                                shareTimer = null;
+                                $("#infos").html("Echec du partage.");
+                            };
+                            
+                            navigator.geolocation.getCurrentPosition(onGPSSuccess, onGPSError);
+                        } else {
+                            $("#autoShare").attr('checked', false);
+                            clearInterval(shareTimer);
+                            shareTimer = null;
+                            $("#infos").html("Echec du partage.");
+                        }
+                    }, 30000);
+                }
+            } else {
+                $("#infos").html("Partage automatique désactivé.");
+                 if (shareTimer != null) {
+                     clearInterval(shareTimer);
+                     shareTimer = null;
+                 }
+            }
+        });
     },
     onDeviceReady: function() {
         app.refreshDeviceList();
@@ -119,71 +184,6 @@ var app = {
         $("#tempCelsius").html(tempValue.toFixed(2));
         $("#hum").html(humValue.toFixed(2));
         $("#batterie").html(batValue.toFixed(2));
-    },
-    autoShareChange: function() {
-        var checked = $("#autoShare").attr('checked');
-        if (checked) {
-            if (shareTimer == null) {
-                shareTimer = setInterval(function() {
-                    $("#infos").html("Partage en cours...");
-                    if (ppmpcfValue && tempValue && humValue) {
-                        dataToShare.ppmpcf = ppmpcfValue;
-                        dataToShare.temperature = tempValue;
-                        dataToShare.humidity = humValue;
-                        
-                        var onGPSSuccess = function(position) {
-                            dataToShare.latitude = position.coords.latitude;
-                            dataToShare.longitude = position.coords.longitude;
-                            if (position.coords.altitude == null) {
-                                dataToShare.altitude = 0;
-                            } else {
-                                dataToShare.altitude = position.coords.altitude;
-                            }
-                            if (position.timestamp !== undefined) {
-                                dataToShare.timestamp = position.timestamp;
-                            } else {
-                                dataToShare.timestamp = new Date().getTime();
-                            }
-                            
-                            $.ajax({
-                                url: "http://pmclab.fr:8043/addAll",
-                                type: 'PUT',
-                                data: JSON.stringify(dataToShare),
-                                contentType: 'application/json',
-                                success: function(result) {
-                                    $("#infos").html("Données partagées automatiquement.");
-                                },
-                                error: function(xhr, status, error) {
-                                    $("#autoShare").attr('checked', false);
-                                    clearInterval(shareTimer);
-                                    shareTimer = null;
-                		        	$("#infos").html("Echec du partage.");
-                                }
-                            });
-                        };
-                        
-                        var onGPSError = function(error) {
-                            $("#autoShare").attr('checked', false);
-                            clearInterval(shareTimer);
-                            shareTimer = null;
-                            $("#infos").html("Echec du partage.");
-                        };
-                        
-                        navigator.geolocation.getCurrentPosition(onGPSSuccess, onGPSError);
-                    } else {
-                        $("#autoShare").attr('checked', false);
-                        clearInterval(shareTimer);
-                        shareTimer = null;
-                        $("#infos").html("Echec du partage.");
-                    }
-                }, 30000);
-            }
-        } else {
-             if (shareTimer != null) {
-                 clearInterval(shareTimer);
-                 shareTimer = null;
-             }
-        }
     },
     shareData: function() {
         $("#ajaxLoader").show();
