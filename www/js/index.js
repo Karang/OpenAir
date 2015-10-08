@@ -256,6 +256,11 @@ var app = {
     },
     disconnect: function() {
         rfduino.disconnect(app.showMainPage, app.onError);
+        if (shareTimer != null) {
+            $("#autoShare").attr('checked', false);
+            clearInterval(shareTimer);
+            shareTimer = null;
+        }
     },
     showMainPage: function() {
         $("#mainPage").show();
