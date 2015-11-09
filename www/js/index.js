@@ -22,10 +22,6 @@ var arrayBufferToFloat = function (ab) {
     return a;
 };
 
-function arrayBuffer2str(buf) {
-  return String.fromCharCode.apply(null, new Uint8Array(buf));
-}
-
 var slope = function(value, min, max) {
 	return (value-min)/(max-min);
 };
@@ -190,7 +186,8 @@ var app = {
         humValue = dataArray[1];
         var batValue = BatteryTool.voltageToPcent(dataArray[3]);
 
-        $("#ppmpcf").html((dataToShare.ppmpcf*100).toFixed(2));
+        var ppcf = ppmpcfValue * 100.0;
+        $("#ppmpcf").html(ppcf.toFixed(2));
         $("#tempCelsius").html(tempValue.toFixed(2));
         $("#hum").html(humValue.toFixed(2));
         $("#batterie").html(batValue.toFixed(2));
@@ -222,7 +219,8 @@ var app = {
                 }
                 
                 var html = "";
-                html += "Particules : "+(dataToShare.ppmpcf*100).toFixed(2)+" ppcf<br/>";
+                var ppcf = dataToShare.ppmpcf * 100.0;
+                html += "Particules : "+ppcf.toFixed(2)+" ppcf<br/>";
                 html +=	"Température : "+dataToShare.temperature.toFixed(2)+" &deg;C<br/>";
                 html += "Humidité : "+dataToShare.humidity.toFixed(2)+" %<br/>";
                 html += "<br/>";
