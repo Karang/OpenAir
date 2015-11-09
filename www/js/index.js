@@ -22,6 +22,10 @@ var arrayBufferToFloat = function (ab) {
     return a;
 };
 
+function arrayBuffer2str(buf) {
+  return String.fromCharCode.apply(null, new Uint8Array(buf));
+}
+
 var slope = function(value, min, max) {
 	return (value-min)/(max-min);
 };
@@ -53,6 +57,7 @@ var dataToShare = {};
 var ppmpcfValue;
 var tempValue;
 var humValue;
+var serial = "";
 
 var shareTimer = null;
 
@@ -178,12 +183,14 @@ var app = {
         ppmpcfValue = dataArray[0];
         tempValue = dataArray[2];
         humValue = dataArray[1];
+        serial = arrayBuffer2str(data).substring(12);
         var batValue = BatteryTool.voltageToPcent(dataArray[3]);
 
-        $("#ppmpcf").html(ppmpcfValue.toFixed(2));
+        $("#ppmpcf").html((dataToShare.ppmpcf*100).toFixed(2));
         $("#tempCelsius").html(tempValue.toFixed(2));
         $("#hum").html(humValue.toFixed(2));
         $("#batterie").html(batValue.toFixed(2));
+        $("#serial").html(serial);
     },
     shareData: function() {
         $("#ajaxLoader").show();
@@ -194,6 +201,7 @@ var app = {
             dataToShare.ppmpcf = ppmpcfValue;
             dataToShare.temperature = tempValue;
             dataToShare.humidity = humValue;
+            dataToShare.serial = serial;
             
             var onGPSSuccess = function(position) {
                 dataToShare.latitude = position.coords.latitude;
@@ -210,13 +218,14 @@ var app = {
                 }
                 
                 var html = "";
-                html += "Particules : "+dataToShare.ppmpcf.toFixed(2)+" ppm/cf<br/>";
+                html += "Particules : "+(dataToShare.ppmpcf*100).toFixed(2)+" ppcf<br/>";
                 html +=	"Température : "+dataToShare.temperature.toFixed(2)+" &deg;C<br/>";
                 html += "Humidité : "+dataToShare.humidity.toFixed(2)+" %<br/>";
+                html += "Num. de série : "+dataToShare.serial+"<br/>";
                 html += "<br/>";
-                html += "Latitude : "+dataToShare.latitude+"<br/>";
-                html += "Longitude : "+dataToShare.longitude+"<br/>";
-                html += "Altitude : "+dataToShare.altitude+"<br/>";
+                html += "Latitude : "+dataToShare.latitude.toFixed(3)+"<br/>";
+                html += "Longitude : "+dataToShare.longitude.toFixed(3)+"<br/>";
+                html += "Altitude : "+dataToShare.altitude.toFixed(3)+"<br/>";
                 var d = new Date(dataToShare.timestamp);
                 html += "Date : "+d.getDate()+"/"+d.getMonth()+"/"+d.getFullYear()+" "+d.getHours()+":"+d.getMinutes();
                 
