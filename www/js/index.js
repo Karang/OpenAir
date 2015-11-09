@@ -160,16 +160,21 @@ var app = {
 
         listItem.setAttribute('class', "deviceListElt");
         listItem.setAttribute('uuid', device.uuid);
+        listItem.setAttribute('serial', device.advertising);
         listItem.innerHTML = html;
         
         deviceList.appendChild(listItem);
     },
     connect: function(e) {
         var uuid = e.target.getAttribute('uuid');
-        if (uuid==null)
+        var _serial = e.target.getAttribute('serial');
+        if (uuid==null) {
         	uuid = e.target.parentNode.getAttribute('uuid');
+        	_serial = e.target.parentNode.getAttribute('serial');
+        }
         
         var onConnect = function() {
+            serial = _serial;
             rfduino.onData(app.onData, app.onError);
             app.showDetailPage();
         };
@@ -183,7 +188,6 @@ var app = {
         ppmpcfValue = dataArray[0];
         tempValue = dataArray[2];
         humValue = dataArray[1];
-        serial = arrayBuffer2str(data).substring(12);
         var batValue = BatteryTool.voltageToPcent(dataArray[3]);
 
         $("#ppmpcf").html((dataToShare.ppmpcf*100).toFixed(2));
@@ -221,7 +225,6 @@ var app = {
                 html += "Particules : "+(dataToShare.ppmpcf*100).toFixed(2)+" ppcf<br/>";
                 html +=	"Température : "+dataToShare.temperature.toFixed(2)+" &deg;C<br/>";
                 html += "Humidité : "+dataToShare.humidity.toFixed(2)+" %<br/>";
-                html += "Num. de série : "+dataToShare.serial+"<br/>";
                 html += "<br/>";
                 html += "Latitude : "+dataToShare.latitude.toFixed(3)+"<br/>";
                 html += "Longitude : "+dataToShare.longitude.toFixed(3)+"<br/>";
